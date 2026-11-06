@@ -1,14 +1,14 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, LINE_WIDTH
+from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED
 
 class Player(CircleShape):
     def __init__(self,x,y):
         super().__init__(x, y,PLAYER_RADIUS)
         self.rotation = 0
     
-    def rotate(dt):
-        rotation + PLAYER_TURN_SPEED * dt
+    def rotate(self, dt):
+        self.rotation += PLAYER_TURN_SPEED * dt
 
     def update(self, dt: float) -> None:
         keys = pygame.key.get_pressed()
