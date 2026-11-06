@@ -27,7 +27,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        player.update(dt)   
+        updatable.update(dt)
+        for object in drawable:
+            object.draw(screen)
         screen.fill("black")
         player.draw(screen)
         pygame.display.flip()
