@@ -34,7 +34,7 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle() , 2)
+        pygame.draw.polygon(screen, "white", self.triangle() , LINE_WIDTH)
        
     def move(self, dt):
         unit_vector = pygame.Vector2(0, 1)
