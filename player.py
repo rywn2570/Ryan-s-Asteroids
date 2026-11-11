@@ -4,15 +4,15 @@ from shot import Shot
 from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS
 
 class Player(CircleShape):
-    def __init__(self,x,y):
-        super().__init__(x, y,PLAYER_RADIUS)
-        self.rotation = 0
-        self.shoot_timer = 0
+    def __init__(self, x: float, y: float) -> None:
+        super().__init__(x, y, PLAYER_RADIUS)
+        self.rotation: float = 0.0
+        self.shoot_timer: float = 0.0
     
-    def rotate(self, dt):
+    def rotate(self, dt: float) -> None:
         self.rotation += PLAYER_TURN_SPEED * dt
 
-    def update(self, dt) -> None:
+    def update(self, dt: float) -> None:
         keys = pygame.key.get_pressed()
         self.shoot_timer -= dt
 
@@ -39,21 +39,20 @@ class Player(CircleShape):
         c = self.position - forward * self.radius + right
         return [a, b, c]
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
        
-    def move(self, dt):
+    def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
         rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
         self.position += rotated_with_speed_vector
 
-    def shoot(self):
+    def shoot(self) -> None:
         if self.shoot_timer > 0:
             return
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN_SECONDS
         shot = Shot(self.position.x, self.position.y)
-        velocity = pygame.Vector2(0,1)
+        velocity = pygame.Vector2(0, 1)
         velocity = velocity.rotate(self.rotation)
         shot.velocity = velocity * PLAYER_SHOOT_SPEED
-        

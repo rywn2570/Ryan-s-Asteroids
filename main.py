@@ -14,7 +14,7 @@ Controls:
     - LEFT / RIGHT ARROWS: Rotate the spaceship
     - UP ARROW: Activate thrusters
     - SPACEBAR: Fire weapons
-    - Ctrl + C: Quit
+    - END: Quit
 """
 
 
@@ -72,20 +72,18 @@ def main():
             for shot in shots: #Iterates over the shots, checking if there is overlap
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
-                    shot.kill() #Don't forget to delete the shot upon impact
+                    shot.kill() 
                     asteroid.split() #Changed from asteroid.kill() to make them split, not just kill
 
         screen.fill("black")
 
-        for object in drawable:
-            object.draw(screen)
+        for obj in drawable:
+            obj.draw(screen)
 
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000
        
-
-
 
 if __name__ == "__main__":
     main()
