@@ -8,24 +8,14 @@ class Asteroid(CircleShape):
     def __init__(self, x: float, y: float, radius: float) -> None:
         super().__init__(x, y, radius)
 
-# ==============================================================================
-# DRAWING ASTEROIDS
-# ==============================================================================
     def draw(self, screen):
         pygame.draw.circle(screen, "white", self.position, self.radius, LINE_WIDTH) 
         
-
-# ==============================================================================
-# UPDATING THE POSITION
-# ==============================================================================
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         self.position += self.velocity * dt
 
 
-# ==============================================================================
-# SPLITTING ASTEROIDS
-# ==============================================================================
-    def split(self):
+    def split(self) -> None:
         self.kill()
 
         # Because the asteroid is at/below minimum size, it just disappears

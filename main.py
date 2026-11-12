@@ -28,7 +28,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from logger import log_state, log_event
 from player import Player
 
-def main():
+def main() -> None:
     print("Starting Asteroids...")
     
     print(f"Screen width: {SCREEN_WIDTH}")
