@@ -8,53 +8,25 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS
 from logger import log_state, log_event
 from player import Player
 
-def main() -> None:
-    print("Starting Asteroids...")
-    
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
-    
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+def rendering_game(screen, drawable, font, score):
+        screen.fill("black")
 
-    clock = pygame.time.Clock()
-    dt = 0.0
+        for obj in drawable:
+            obj.draw(screen)
 
-    updatable = pygame.sprite.Group()
-    drawable = pygame.sprite.Group()
-    asteroids = pygame.sprite.Group()
-    shots = pygame.sprite.Group()
+        score_surface = font.render(f"Score: {score}", True, "white") #More help with this
+        screen.blit(score_surface, (10, 10))  # Top-left corner coordinates
 
-    Shot.containers = (shots, updatable, drawable)
-    Asteroid.containers = (asteroids, updatable, drawable)
-    AsteroidField.containers = updatable
-    asteroid_field = AsteroidField()
+        pygame.display.flip()
 
-    Player.containers = (updatable, drawable)
-
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-  
-    #Initialising font and score (got help)
-    pygame.font.init()
-    font = pygame.font.Font(None, 36)
-    score = 0
-    
-    
-    while True:
-        log_state()
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
-
-        updatable.update(dt)
-        
+def collisions(asteroids, shots, player, score):
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 log_event("player_hit")
                 print("Game over!")
                 print(f"Final score: {score}. Hooray, you did it!")
-                sys.exit() 
+                sys.exit()
+
             for shot in shots: #Iterates over the shots, checking if there is overlap
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
@@ -67,17 +39,48 @@ def main() -> None:
                         score += 100  # Medium asteroid
                     else:
                         score += 200  # Small asteroid
-                    break #Fixing a bug that occurs with the score stopping the shots
+                    break #Fixing a bug that occured with the score previously
+        return score
 
-        screen.fill("black")
+def main() -> None:
+    print("Starting Asteroids...")
+    
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    clock = pygame.time.Clock()
+    dt = 0.0
+    
+    #Sprite groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
 
-        for obj in drawable:
-            obj.draw(screen)
-        
-        score_surface = font.render(f"Score: {score}", True, "white") #More help with this
-        screen.blit(score_surface, (10, 10))  # Top-left corner coordinates
+    Shot.containers = (shots, updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = updatable
+    asteroid_field = AsteroidField()
 
-        pygame.display.flip()
+    Player.containers = (updatable, drawable)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+  
+    #User Interface
+    #Initialising font and score (got help)
+    pygame.font.init()
+    font = pygame.font.Font(None, 36)
+    score = 0
+    
+    #Main game loop
+    while True:
+        log_state()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+
+        updatable.update(dt)
+        score = collisions(asteroids, shots, player, score)
+        rendering_game(screen, drawable, font, score)
 
         dt = clock.tick(60) / 1000
        
