@@ -8,7 +8,6 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS
 from logger import log_state, log_event
 from player import Player
 
-
 def main() -> None:
     print("Starting Asteroids...")
     
@@ -54,7 +53,7 @@ def main() -> None:
             if asteroid.collides_with(player):
                 log_event("player_hit")
                 print("Game over!")
-                print(f"Final score: {score}. Congratulations!")
+                print(f"Final score: {score}. Hooray, you did it!")
                 sys.exit() 
             for shot in shots: #Iterates over the shots, checking if there is overlap
                 if asteroid.collides_with(shot):
