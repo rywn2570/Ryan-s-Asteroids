@@ -1,32 +1,13 @@
-"""
-Title: Asteroids Arcade Game
-Author: Ryan Lin 
-Date: November 2026
-Course: Building Asteroids using Python and Pygame - Bootdev
-
-Description:
-    Asteroids is a 1979 multidirectional shooter video game originally developed and published by Atari, Inc. 
-    for arcades. This version of the game features a single-player 2D arcade game built with Pygame. 
-    The player controls a spaceship using physics-based momentum to navigate space, avoid asteroids, 
-    and shoot targets.
-    
-Controls:
-    - LEFT / RIGHT ARROWS: Rotate the spaceship
-    - UP ARROW: Activate thrusters
-    - SPACEBAR: Fire weapons
-    - END: Quit
-"""
-
-
 
 import pygame
 import sys
 from asteroidfield import AsteroidField
 from shot import Shot
 from asteroid import Asteroid
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_MIN_RADIUS
 from logger import log_state, log_event
 from player import Player
+
 
 def main() -> None:
     print("Starting Asteroids...")
@@ -36,7 +17,7 @@ def main() -> None:
     
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    
+
     clock = pygame.time.Clock()
     dt = 0.0
 
@@ -53,6 +34,11 @@ def main() -> None:
     Player.containers = (updatable, drawable)
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+  
+    #Initialising font and score (got help)
+    pygame.font.init()
+    font = pygame.font.Font(None, 36)
+    score = 0
     
     
     while True:
@@ -68,17 +54,29 @@ def main() -> None:
             if asteroid.collides_with(player):
                 log_event("player_hit")
                 print("Game over!")
-                sys.exit() #Need to stop the game running
+                print(f"Final score: {score}. Congratulations!")
+                sys.exit() 
             for shot in shots: #Iterates over the shots, checking if there is overlap
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
                     shot.kill() 
                     asteroid.split() #Changed from asteroid.kill() to make them split, not just kill
+                    # Award points based on size
+                    if asteroid.radius > ASTEROID_MIN_RADIUS * 2:
+                        score += 50   # Large asteroid
+                    elif asteroid.radius > ASTEROID_MIN_RADIUS:
+                        score += 100  # Medium asteroid
+                    else:
+                        score += 200  # Small asteroid
+                    break #Fixing a bug that occurs with the score stopping the shots
 
         screen.fill("black")
 
         for obj in drawable:
             obj.draw(screen)
+        
+        score_surface = font.render(f"Score: {score}", True, "white") #More help with this
+        screen.blit(score_surface, (10, 10))  # Top-left corner coordinates
 
         pygame.display.flip()
 
