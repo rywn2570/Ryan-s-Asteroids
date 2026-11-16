@@ -2,7 +2,7 @@ import pygame
 import sys
 from circleshape import CircleShape
 from shot import Shot
-from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS
+from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS, SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Player(CircleShape):
     def __init__(self, x: float, y: float) -> None:
@@ -32,6 +32,17 @@ class Player(CircleShape):
         if keys[pygame.K_END]:
             sys.exit()
 
+        # Need to stop the player from leaving the screen
+        if self.position.x < 0:
+            self.position.x = 0
+        elif self.position.x > SCREEN_WIDTH:
+            self.position.x = SCREEN_WIDTH
+
+        if self.position.y < 0:
+            self.position.y = 0
+        elif self.position.y > SCREEN_HEIGHT:
+            self.position.y = SCREEN_HEIGHT
+
     def triangle(self) -> list[pygame.Vector2]:
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -42,7 +53,14 @@ class Player(CircleShape):
 
     def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
-       
+      
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            forward = pygame.Vector2(0, 1).rotate(self.rotation)
+            flame = self.position - forward * (self.radius + 2) #More research
+
+            pygame.draw.circle(screen, "orange", flame, 6)
+        
     def move(self, dt: float) -> None:
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
