@@ -26,16 +26,24 @@ class Asteroid(CircleShape):
         
         random_angle = random.uniform(20, 50)
 
-        # Giving the new, smaller asteroids a different direction to increase the difficulty of being hit
-        vector1 = self.velocity.rotate(random_angle)
-        vector2 = self.velocity.rotate(-random_angle)
-
         new_radius = self.radius - ASTEROID_MIN_RADIUS
 
-        #Update Asteroid constructor call arguments if they differ
+        # Creating two new, smaller asteroids with the same position as the original asteroid
         asteroid1 = Asteroid(self.position.x, self.position.y, new_radius)
         asteroid2 = Asteroid(self.position.x, self.position.y, new_radius)
+
+        # Giving the new asteroids a random angle to move in, based on the original asteroid's velocity
+        vector1 = self.velocity.rotate(random_angle)
+        vector2 = self.velocity.rotate(-random_angle)
 
         # Increasing the new, smaller asteroids' speed to increase difficutly of being hit
         asteroid1.velocity = vector1 * 1.2
         asteroid2.velocity = vector2 * 1.2
+
+    def score_for_radius(self) -> int:
+        if self.radius > ASTEROID_MIN_RADIUS * 2:
+            return 50 # Large
+        elif self.radius > ASTEROID_MIN_RADIUS:
+            return 100 # Medium
+        else: 
+            return 200 # Small

@@ -7,7 +7,7 @@ from constants import ASTEROID_MAX_RADIUS, ASTEROID_MIN_RADIUS, SCREEN_HEIGHT, S
 
 Edge = tuple[pygame.Vector2, Callable[[float], pygame.Vector2]]
 
-
+# Stuff copied as instructed from bootdev
 class AsteroidField(pygame.sprite.Sprite):
     containers: pygame.sprite.Group
 

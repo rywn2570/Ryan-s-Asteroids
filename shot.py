@@ -7,9 +7,9 @@ class Shot(CircleShape):
         super().__init__(x, y, SHOT_RADIUS)
 
     def draw(self, screen) -> None:
-        pygame.draw.circle(screen, "white", self.position, self.radius, LINE_WIDTH) 
+        pygame.draw.circle(screen, "red", self.position, self.radius, LINE_WIDTH) 
         
 
     def update(self, dt: float) -> None:
-        self.position += self.velocity * dt
+        self.position += self.velocity * dt # The shot moves in the direction of the player's rotation, with a speed defined by PLAYER_SHOOT_SPEED in constants.py
 

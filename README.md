@@ -13,7 +13,8 @@ Description:
     and shoot targets.
     
 Controls:
-    - LEFT / RIGHT ARROWS: Rotate the spaceship
-    - UP ARROW: Activate thrusters
-    - SPACEBAR: Fire weapons
+    - A / D: Rotate the spaceship
+    - W: Activate thrusters
+    - SPACEBAR (Quick): Fires weapon once.
+    - SPACEBAR (Held): Fires a beam, then cools down.
     - END: Quit
