@@ -1,4 +1,5 @@
-## Asteroids Project Notebook
+# Asteroids Project Notebook
+(Please view in fullscreen)
 
 # IPO Table 
 | Function | Input | Process | Output |
@@ -49,6 +50,7 @@
 │ + triangle() │  └─────────────────┘
 └──────────────┘
 ```
+(Made with box-drawing characters)
 
 # Collision Detection Strategy
 All physical game entities inherit from CircleShape and use circle-based collision detection. Two entities collide when the distance between their centers is less than the sum of their radii. This method is efficient and avoids complex polygon-intersection checks, but it is an approximation: the player's circular hitbox may not match the outline of the triangular ship exactly.
@@ -62,39 +64,72 @@ Collision detection from CircleShape:
 
 # Game State Flow Diagram
 ```text
-[ START PROGRAM (main.py) ]
-        		│
-        		▼
-/ Initialize Pygame, Mixer, Display, & Sprite Groups /
-        		│
-        		▼
-◆──►    [ Game Loop] ◄──────────────────────────┐
-│       │                                        │
-│       ├──► [ handle_events() ] ──(QUIT / END)──► [ END PROGRAM ]
-│       │
-│       ▼
-│   [ update_game(dt) ]
-│       ├──► Player.update(): Reads W/A/D/SPACE, clamps boundaries, spawns Shots
-│       ├──► AsteroidField.update(): Spawns new Asteroids at screen edges
-│       └──► handle_collisions():
-│               ├──► Shot hits Asteroid ──► score += 50/100/200 & Asteroid.split()
-│               └──► Asteroid hits Player ──► lives -= 1 & reset Player position
-│       		│
-│       		▼
-│   / Check Extra Life (score >= next_extra_life_score -> lives += 1) /
-│       		│
-│       		▼
-│   [ render_game() ] ──► Draw Sprites & HUD (Score / Lives)
-│       		│					            │
-│       		▼					            │
-│   		◆── Is lives <= 0? ──(No)──────────┘
-│       		│ (Yes)
-│       		▼
-│   / Render "GAME OVER" & Final Score, wait 3s /
-│       		│
-│       		▼
-└──► [ END PROGRAM ]
+[ START PROGRAM ]
+        │
+        ▼
+┌──────────────────────────────────────────┐
+│ Initialize Pygame, mixer, display, fonts │
+│ Create sprite groups and spawn the player│
+└──────────────────────────────────────────┘
+        │
+        ▼
+┌──────────────────────────────────────────┐
+│                 GAME LOOP                │
+└──────────────────────────────────────────┘
+        │
+        ▼
+┌──────────────────────────────────────────┐
+│ handle_events(): window close?           │
+└──────────────────────────────────────────┘
+      │ No                           │ Yes
+      ▼                              ▼
+[ update_game(dt) ]             [ END PROGRAM ]
+      │
+      ├──► Player.update()
+      │    ├── Read W / A / D / SPACE
+      │    ├── Move, rotate and clamp boundaries
+      │    ├── Spawn Shots while firing
+      │    └── END key exits the program
+      │
+      ├──► AsteroidField.update()
+      │    └── Spawn Asteroids at screen edges
+      │
+      └──► handle_collisions()
+      │    ├── Shot / Asteroid:
+      │    │   score += 50 / 100 / 200
+      │    │   and Asteroid.split()
+      │    └── Asteroid / Player:
+      │        lives -= 1
+      │        and reset Player position
+      │
+      ▼
+[ render_game() ]
+  ├── Draw sprites
+  ├── Draw Score and Lives HUD
+  └── Display "GAME OVER" and final score if lives <= 0
+      │
+      ▼
+◆── Is lives <= 0? ── Yes ──► Show "Game Over" Wait 3 seconds
+│                                       │
+│                                       ▼
+│                                 [ END PROGRAM ]
+│
+└── No
+      │
+      ▼
+      ◆── Has score reached the next extra-life threshold?
+            │
+            ├── Yes ──► lives += 1
+            │          next_extra_life_score += 10,000
+            │
+            └── No ───► Continue
+                            │
+                            ▼
+                        [ Wait for next 60 FPS frame ]
+                            │
+                            └──────────────► Return to GAME LOOP
 ```
+(Made with box-drawing characters)
 
 # Test Cases
 (See 'pytests' folder for all of the test cases. Just ensure pytest is installed beforehand and run "python -m pytest")
@@ -108,3 +143,5 @@ Visual and audio feedback—such as the orange thruster flame, HUD color changes
 Challenges and Solutions:
 Early on in the project I faced major difficulty following along with the bootdev Object Orientated Programming lessons as our teacher was unavailable and I felt the lessons didn't properly teach me how to use the different components well. Hence when I progressed into the assessment - building the actual Asteroids game, I was really struggling. One of the key solutions to this was to utilize bootdev's built-in educational AI, Boots. I could ask it to expand on the usage of a particular element not explained in the actual lesson section. As I completed the bootdev course on Asteroids, I began to explore different ways to make the game engaging to the user. The next challenge was one of the biggest - using ssh to access the compsci.pared account. Being unable to login to my account at home meant I was unable to efficiently save and sync my work accross different devices. Luckily, one of my classmates discovered a way to utilize the token system of github to allow us to push code to a github repository as an alternative to ssh, without signing in. 
 Unlike BookBot—where functions processed standard strings and dictionaries — Pygame required things like display surfaces, audio mixers, and system event queues. This meant that writing unit tests would differ; I was unsure of how I would test units without running the game. My solution to this was to research. I came across Python's unittest.mock module that allowed me to simulate SFX, event queues and drawings so my tests could run instantly and reliably. You can view this in many of my tests under the folder "pytests".  
+
+(Researched and got help with the formatting of diagrams)
