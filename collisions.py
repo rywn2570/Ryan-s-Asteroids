@@ -21,7 +21,6 @@ def handle_player_collisions(
 
             if lives > 0:
                 player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-                player.velocity = pygame.Vector2(0, 0)
 
             asteroid.kill()
             break

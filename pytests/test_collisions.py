@@ -20,7 +20,7 @@ def test_player_collision_life_reset(): # Test that when a player collides with 
 
     assert lives == 2 
     assert player.position == pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    assert player.velocity == pygame.Vector2(0, 0)
+
 
 def test_player_collision_no_life_loss(): # Test that when a player does not collide with an asteroid, they do not lose a life and their position and velocity remain the same
     asteroid = Mock()
