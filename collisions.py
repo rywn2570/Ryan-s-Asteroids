@@ -8,11 +8,15 @@ from player import Player
 
 
 def handle_player_collisions(
-    asteroids: pygame.sprite.Group, player: Player, lives: int
+    asteroids: pygame.sprite.Group,
+    player: Player,
+    lives: int,
+    hit_sound: pygame.mixer.Sound,
 ) -> int:
     for asteroid in list(asteroids):
         if asteroid.collides_with(player):
             log_event("player_hit")
+            hit_sound.play()
             lives -= 1
 
             if lives > 0:
@@ -26,12 +30,16 @@ def handle_player_collisions(
 
 
 def handle_shot_collisions(
-    asteroids: pygame.sprite.Group, shots: pygame.sprite.Group, score: int
+    asteroids: pygame.sprite.Group,
+    shots: pygame.sprite.Group,
+    score: int,
+    hit_sound: pygame.mixer.Sound,
 ) -> int:
     for asteroid in list(asteroids):
         for shot in list(shots):
             if asteroid.collides_with(shot):
                 log_event("asteroid_shot")
+                hit_sound.play()
                 shot.kill()
                 score += asteroid.score_for_radius()
                 asteroid.split()
@@ -46,7 +54,8 @@ def handle_collisions(
     player: Player,
     score: int,
     lives: int,
+    hit_sound: pygame.mixer.Sound,
 ) -> tuple[int, int]:
-    lives = handle_player_collisions(asteroids, player, lives)
-    score = handle_shot_collisions(asteroids, shots, score)
+    lives = handle_player_collisions(asteroids, player, lives, hit_sound)
+    score = handle_shot_collisions(asteroids, shots, score, hit_sound)
     return score, lives

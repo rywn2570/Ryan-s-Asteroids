@@ -5,12 +5,15 @@ from shot import Shot
 from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS, SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_SHOOT_BURST_SECONDS, PLAYER_SHOOT_REST_SECONDS
 
 class Player(CircleShape):
-    def __init__(self, x: float, y: float) -> None:
+    def __init__(
+        self, x: float, y: float, shoot_sound: pygame.mixer.Sound
+    ) -> None:
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation: float = 0.0
         self.shoot_timer: float = 0.0
         self.shooting_duration: float = 0.0
         self.shoot_rest_timer: float = 0.0
+        self.shoot_sound = shoot_sound
     
     def rotate(self, dt: float) -> None:
         self.rotation += PLAYER_TURN_SPEED * dt
@@ -92,3 +95,4 @@ class Player(CircleShape):
         velocity = pygame.Vector2(0, 1)
         velocity = velocity.rotate(self.rotation)
         shot.velocity = velocity * PLAYER_SHOOT_SPEED
+        self.shoot_sound.play()

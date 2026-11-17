@@ -21,9 +21,13 @@ def render_game(
         obj.draw(screen)
 
     score_surface = font.render(f"Score: {score}", True, "white") #Researched coordinates and .render
+    if score >= 10_000:
+        score_surface = font.render(f"Lives Left: {score}", True, (173, 216, 230)) # Change color to blue when score is 10,000 or more
     screen.blit(score_surface, (10, 10)) # Top-left corner coordinates
 
     lives_surface = font.render(f"Lives Left: {lives}", True, "white")
+    if lives > 4:
+        lives_surface = font.render(f"Lives Left: {lives}", True, (173, 216, 230)) # Change color to blue when lives is greater than 4
     screen.blit(lives_surface, (10, 50)) # Just below the score
 
     if lives <= 0:
@@ -51,9 +55,12 @@ def update_game(
     player: Player,
     score: int,
     lives: int,
+    hit_sound: pygame.mixer.Sound,
 ) -> tuple[int, int]: # Used to update and check game
     updatable.update(dt)
-    score, lives = handle_collisions(asteroids, shots, player, score, lives)
+    score, lives = handle_collisions(
+        asteroids, shots, player, score, lives, hit_sound
+    )
     return score, lives
 
 
@@ -61,6 +68,15 @@ def main() -> None:
     print("Starting Asteroids...")
 
     pygame.init()
+    pygame.mixer.init() # Adding some really cool music and sound effects for the game
+    pygame.mixer.music.load("sounds/music.mp3") # Background music 
+    pygame.mixer.music.set_volume(1.0) # Set volume to maximum
+    pygame.mixer.music.play(-1) # -1 means loop indefinitely, so the music will keep playing in the background
+    hit_sound = pygame.mixer.Sound("sounds/hit.mp3") # Player / asteroid collision sound effect
+    hit_sound.set_volume(0.5)
+    shoot_sound = pygame.mixer.Sound("sounds/shot.mp3") # Player shooting sound effect
+    shoot_sound.set_volume(0.3)
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0.0
@@ -77,12 +93,13 @@ def main() -> None:
     asteroid_field = AsteroidField()
 
     Player.containers = (updatable, drawable)
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, shoot_sound)
 
     pygame.font.init()
     font = pygame.font.Font(None, 36)
     score = 0
     lives = 3
+    next_extra_life_score = 10_000
 
     while True:
         log_state()
@@ -90,14 +107,21 @@ def main() -> None:
         if not handle_events(): # Cleaner exit of the game if handle_events() is false
             return             
 
-        score, lives = update_game(dt, updatable, asteroids, shots, player, score, lives)
+        score, lives = update_game(
+            dt, updatable, asteroids, shots, player, score, lives, hit_sound
+        )
         render_game(screen, drawable, font, score, lives)
+
+
 
         if lives <= 0:
             pygame.time.wait(3000)
             print("Game over!")
             print(f"Final score: {score}. Hooray, you did it!")
             return
+        while score >= next_extra_life_score:
+            lives += 1
+            next_extra_life_score += 10_000
 
         # Frames per second
         dt = clock.tick(60) / 1000
