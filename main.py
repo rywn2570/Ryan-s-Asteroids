@@ -24,6 +24,13 @@ def render_game(
     if score >= 10_000:
         score_surface = font.render(f"Score: {score}", True, (173, 216, 230)) # Change color to blue when score is 10,000 or more
     screen.blit(score_surface, (10, 10)) # Top-left corner coordinates
+    
+    if 100_000 <= score < 101_000:
+        boots_surface = font.render("Someone rm -rf'd the root directory", True, "red")
+        screen.blit(boots_surface, (SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 + 20))
+    elif 50_000 <= score < 51_000:
+        boots_surface = font.render("Boots is loose in the server room", True, "red")
+        screen.blit(boots_surface, (SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 20))
 
     lives_surface = font.render(f"Lives Left: {lives}", True, "white")
     if lives > 4:
