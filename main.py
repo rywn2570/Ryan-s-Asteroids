@@ -22,7 +22,7 @@ def render_game(
 
     score_surface = font.render(f"Score: {score}", True, "white") #Researched coordinates and .render
     if score >= 10_000:
-        score_surface = font.render(f"Lives Left: {score}", True, (173, 216, 230)) # Change color to blue when score is 10,000 or more
+        score_surface = font.render(f"Score: {score}", True, (173, 216, 230)) # Change color to blue when score is 10,000 or more
     screen.blit(score_surface, (10, 10)) # Top-left corner coordinates
 
     lives_surface = font.render(f"Lives Left: {lives}", True, "white")
