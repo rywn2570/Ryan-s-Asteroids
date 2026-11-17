@@ -45,6 +45,6 @@ def test_asteroid_init_extra_values():
 	with pytest.raises(TypeError):
 		Asteroid(10, 6230, 5, 100)
 
-def test_asteroid_init_invalid_types():
-	with pytest.raises(Exception):
+def test_asteroid_radi_invalid_types():
+	with pytest.raises(ValueError): # Pygame actually raises a ValueError instead of TypeError when invalid types are passed
 		Asteroid("10", "6230", "5")
