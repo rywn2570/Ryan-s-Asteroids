@@ -97,7 +97,7 @@ Collision detection from CircleShape:
 ```
 
 # Test Cases
-(See 'pytests' folder for all of the test cases)
+(See 'pytests' folder for all of the test cases. Just ensure pytest is installed beforehand and run "python -m pytest")
 
 # Reflection
 Design Justifications:
